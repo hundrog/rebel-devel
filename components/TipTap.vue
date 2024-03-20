@@ -20,10 +20,10 @@ function myEvent() {
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col space-y-4">
     <editor-content :editor="editor" />
     <div class="flex justify-end">
-      <button class="justify-end mt-2 btn btn-primary" @click="myEvent()">Save</button>
+      <button class="btn-block max-w-xs btn btn-primary" @click="myEvent()">Save Article</button>
     </div>
   </div>
 </template>
