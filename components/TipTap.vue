@@ -1,0 +1,32 @@
+<script lang="ts" setup>
+import { useEditor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+
+const editor = useEditor({
+  content: '<p>I’m running Tiptap with Vue.js. 🎉</p>',
+  extensions: [
+    StarterKit,
+  ],
+  editorProps: {
+    attributes: {
+      class: 'textarea textarea-bordered textarea-lg'
+    }
+  }
+})
+
+function myEvent() {
+  console.log(editor.value?.getHTML())
+}
+</script>
+
+<template>
+  <div class="flex flex-col">
+    <editor-content :editor="editor" />
+    <div class="flex justify-end">
+      <button class="justify-end mt-2 btn btn-primary" @click="myEvent()">Save</button>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+</style>

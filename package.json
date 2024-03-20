@@ -12,6 +12,9 @@
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",
+    "@tiptap/pm": "^2.2.4",
+    "@tiptap/starter-kit": "^2.2.4",
+    "@tiptap/vue-3": "^2.2.4",
     "nuxt": "^3.11.1",
     "theme-change": "^2.5.0",
     "vue": "^3.4.21",
@@ -20,6 +23,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.2.1",
     "@commitlint/config-conventional": "^19.1.0",
+    "@tailwindcss/typography": "^0.5.10",
     "daisyui": "^4.7.3",
     "husky": "^9.0.11"
   }
