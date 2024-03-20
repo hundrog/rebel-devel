@@ -6,7 +6,7 @@ const Configuration: UserConfig = {
   extends: ['@commitlint/config-conventional'],
   formatter: '@commitlint/format',
   rules: {
-    'body-case': [RuleConfigSeverity.Error, 'always', ['lower-case', 'snake-case']]
+    'body-case': [RuleConfigSeverity.Error, 'always', ['lower-case', 'sentence-case']]
   },
 };
 
