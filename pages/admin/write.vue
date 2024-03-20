@@ -1,14 +1,22 @@
 <script lang="ts" setup>
 const avatar_path = ref('')
+const route = useRoute();
+
+watch(route, ()=>{
+  if (route.query) {
+    console.log(route.query)
+    // Will download article content in the future
+  }
+}, {immediate: true})
 </script>
 
 <template>
-  <div class="text-2xl">
-    Page: articles/write
+  <div class="flex flex-row justify-between mb-16">
+    <TitleField />
+    <UploadImage v-model:path="avatar_path" />
   </div>
-  <UploadImage v-model:path="avatar_path" />
-  <h3 class="text-3xl">Editor</h3>
   <TipTap />
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

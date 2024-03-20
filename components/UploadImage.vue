@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs, defineProps } from 'vue';
+import { ref, toRefs } from 'vue';
 
 const props = defineProps(['path'])
 const { path } = toRefs(props)
