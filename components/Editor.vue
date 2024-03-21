@@ -7,7 +7,8 @@ const editor = useEditor({
   content: '<p>I’m running Tiptap with Vue.js. 🎉</p>',
   extensions: [
     StarterKit.configure({
-      heading: false
+      heading: false,
+      code: false,
     }),
     TailwindHeadings
   ],

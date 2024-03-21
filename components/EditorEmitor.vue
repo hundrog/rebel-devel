@@ -2,6 +2,7 @@
 import StarterKit from '@tiptap/starter-kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
 import TailwindHeadings from './extensions/TailwindHeadings'
+import { TailwindCode, TailwindUnderline, TailwindCodeBlock } from './extensions/TailwindMarks';
 
 const props = defineProps({
   modelValue: {
@@ -15,9 +16,14 @@ const emit = defineEmits(['update:modelValue'])
 const editor = useEditor({
   extensions: [
     StarterKit.configure({
-      heading: false
+      heading: false,
+      code: false,
+      codeBlock: false
     }),
     TailwindHeadings,
+    TailwindUnderline,
+    TailwindCode,
+    TailwindCodeBlock,
   ],
   content: modelValue.value,
   onUpdate({ editor }) {
@@ -35,7 +41,7 @@ onBeforeUnmount(() => {
 })
 
 watch(modelValue, (newValue: string, oldValue: string) => {
-  if (newValue === oldValue) { return }
+  if (newValue === editor.value?.getHTML()) { return }
 
   editor.value?.commands.setContent(newValue, false)
 })
