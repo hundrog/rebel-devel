@@ -12,7 +12,7 @@ export type Database = {
       articles: {
         Row: {
           category_id: number
-          content: string | null
+          content: string
           created_at: string | null
           id: string
           images: string[] | null
@@ -21,7 +21,7 @@ export type Database = {
         }
         Insert: {
           category_id: number
-          content?: string | null
+          content?: string
           created_at?: string | null
           id?: string
           images?: string[] | null
@@ -30,7 +30,7 @@ export type Database = {
         }
         Update: {
           category_id?: number
-          content?: string | null
+          content?: string
           created_at?: string | null
           id?: string
           images?: string[] | null

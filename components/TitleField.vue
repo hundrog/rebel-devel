@@ -1,35 +1,39 @@
 <script lang="ts" setup>
-import type { Database } from '~/types/supabase'
+import type { Database, Tables } from '~/types/supabase'
 const router = useRouter()
 
 const supabase = useSupabaseClient<Database>()
-const title = ref('New Article')
 const editing = ref(false)
-const article = ref()
+const dirty = ref(false)
+
+const defaultState = {
+  content: '',
+  id: '',
+  title: 'New Article',
+}
+
+const article = ref({...defaultState})
 
 async function setTitle() {
-  if (article.value) {
+  if (dirty.value) {
     if (article.value?.id) {
       // Update the article in supabase
       const { data, error } = await supabase
         .from('articles')
-        .update({ title: title.value })
+        .update({ title: article.value.title })
         .eq('id', article.value.id)
         .select()
-      if (!error) {
-        console.log(data)
-      } else {
+      if (error) {
         console.log(error)
       }
     } else {
       //create new article
       const { data, error } = await supabase
         .from('articles')
-        .insert({ title: title.value, category_id: 1 })
-        .select()
-      if (!error) {
-        article.value = data.at(0)
-        console.log(article.value)
+        .insert({ title: article.value.title, category_id: 1 })
+        .select('id, title, content')
+      if (!error && data) {
+        article.value = data[0]
         router.push({ query: { id: article.value.id } })
       } else {
         console.log(error)
@@ -37,19 +41,24 @@ async function setTitle() {
     }
   }
 
+  dirty.value = false
   editing.value = false
 }
+
+watch(() => article.value.title, (newtitle, oldTitle) => {
+  if (newtitle !== oldTitle) { dirty.value = true }
+})
 </script>
 
 <template>
   <div class="flex-1">
     <form @submit.prevent="setTitle" class="flex justify-start space-x-4">
       <div class="block w-full max-w-xl">
-        <input name="title" type="text" :placeholder="title" class="input-bordered w-full max-w-lg input"
-          v-model="article?.title" v-if="editing" />
-        <h2 class="text-5xl" v-else>{{ article?.title || title }}</h2>
+        <input name="title" type="text" :placeholder="defaultState.title" class="input-bordered w-full max-w-lg input"
+          v-model="article.title" v-if="editing" />
+        <h2 class="text-5xl" v-else>{{ article?.title || defaultState.title }}</h2>
       </div>
-      <div class="flex" v-if="editing">
+      <div class="flex flex-col" v-if="editing">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-6 h-6 hover:text-primary active:text-primary/75 cursor-pointer" @click="setTitle">
           <path stroke-linecap="round" stroke-linejoin="round"

@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 const avatar_path = ref('')
 const route = useRoute();
+const content = ('<p>A Vue.js wrapper component for tiptap to use <code>v-model</code>.</p>')
 
-watch(route, ()=>{
-  if (route.query) {
-    console.log(route.query)
-    // Will download article content in the future
-  }
-}, {immediate: true})
+watch(() => route.query, (newId, oldId) => {
+  // react to route changes...
+  console.log('New id received: ', newId)
+})
 </script>
 
 <template>
@@ -15,7 +14,7 @@ watch(route, ()=>{
     <TitleField />
     <UploadImage v-model:path="avatar_path" />
   </div>
-  <TipTap />
+  <Editor />
 </template>
 
 <style scoped>
