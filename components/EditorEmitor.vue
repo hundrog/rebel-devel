@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import StarterKit from '@tiptap/starter-kit'
 import { EditorContent, useEditor } from '@tiptap/vue-3'
+import TailwindHeadings from './extensions/TailwindHeadings'
 
 const props = defineProps({
   modelValue: {
@@ -13,7 +14,10 @@ const emit = defineEmits(['update:modelValue'])
 
 const editor = useEditor({
   extensions: [
-    StarterKit,
+    StarterKit.configure({
+      heading: false
+    }),
+    TailwindHeadings,
   ],
   content: modelValue.value,
   onUpdate({ editor }) {

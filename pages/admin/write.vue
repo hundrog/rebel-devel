@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const avatar_path = ref('')
 const route = useRoute();
-const content = ('<p>A Vue.js wrapper component for tiptap to use <code>v-model</code>.</p>')
+const content = ref('<p>A Vue.js wrapper component for tiptap to use <code>v-model</code>.</p>')
 
 watch(() => route.query, (newId, oldId) => {
   // react to route changes...
@@ -14,7 +14,9 @@ watch(() => route.query, (newId, oldId) => {
     <TitleField />
     <UploadImage v-model:path="avatar_path" />
   </div>
-  <Editor />
+  <EditorEmitor v-model="content" />
+
+  <pre><code>{{ content }}</code></pre>
 </template>
 
 <style scoped>

@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
+import TailwindHeadings from './extensions/TailwindHeadings';
 
 const editor = useEditor({
   content: '<p>I’m running Tiptap with Vue.js. 🎉</p>',
   extensions: [
-    StarterKit,
+    StarterKit.configure({
+      heading: false
+    }),
+    TailwindHeadings
   ],
   editorProps: {
     attributes: {
