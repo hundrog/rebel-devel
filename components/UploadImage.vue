@@ -1,15 +1,21 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import type { Database, Tables } from '~/types/supabase'
+const route = useRoute();
 
-const props = defineProps(['path'])
+const props = defineProps({
+  path: {
+    type: String,
+    default: ''
+  }
+})
 const { path } = toRefs(props)
 
 const emit = defineEmits(['update:path', 'upload'])
-
-const supabase = useSupabaseClient()
+const supabase = useSupabaseClient<Database>()
 const uploading = ref(false)
 const src = ref('')
 const files = ref()
+const dir = ref()
 
 const uploadImage = async (evt: any) => {
   files.value = evt.target.files
@@ -22,7 +28,7 @@ const uploadImage = async (evt: any) => {
 
     const file = files.value[0]
     const fileExt = file.name.split('.').pop()
-    const fileName = `${new Date(Date.now()).toISOString().slice(0, 10)}/${Math.random().toString().replace('.','')}.${fileExt}`
+    const fileName = `${dir.value}/${Math.random().toString().replace('.', '')}.${fileExt}`
     const filePath = `${fileName}`
 
     const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file)
@@ -37,33 +43,47 @@ const uploadImage = async (evt: any) => {
     uploading.value = false
   }
 }
+
+const downloadImage = (filePath: string) => {
+  const { data } = supabase
+    .storage
+    .from('images')
+    .getPublicUrl(filePath)
+
+  src.value = data.publicUrl
+  console.log(src.value)
+}
+
+const updateArticle = async () => {
+  await supabase
+    .from('images')
+    .insert({ article_id: dir.value, name: path.value.split('/')[1] })
+}
+
+watch(path, () => {
+  if (path.value) {
+    downloadImage(path.value)
+    updateArticle()
+  }
+})
+
+watch(() => route.query, (newId, oldId) => {
+  // react to route changes...
+  console.log('New id received: ', newId)
+  dir.value = newId.id?.toString()
+})
 </script>
 
 <template>
-    <div>
-    <img
-      v-if="src"
-      :src="src"
-      alt="Avatar"
-      class="avatar"
-      style="width: 10em; height: 10em;"
-    />
-
-    <div class="relative flex justify-end">
-      <label class="btn-block max-w-xs btn btn-primary" for="single">
-        <span class="loading loading-spinner" v-if="uploading"></span>
-        <span v-else>Upload Image</span>
-      </label>
-      <input
-        style="position: absolute; visibility: hidden;"
-        type="file"
-        id="single"
-        accept="image/*"
-        @change="uploadImage"
-        :disabled="uploading"
-      />
-    </div>
+  <div class="relative flex mb-4">
+    <label class="max-w-xs btn btn-primary" for="single">
+      <span class="loading loading-spinner" v-if="uploading"></span>
+      <span v-else>Upload Image</span>
+    </label>
+    <input style="position: absolute; visibility: hidden;" type="file" id="single" accept="image/*" @change="uploadImage"
+      :disabled="uploading" />
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
