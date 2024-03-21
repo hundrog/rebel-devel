@@ -5,18 +5,10 @@ const router = useRouter()
 const supabase = useSupabaseClient<Database>()
 const title = ref('New Article')
 const editing = ref(false)
-const article = ref({
-  category_id: 1,
-  content: '',
-  created_at: '',
-  id: '',
-  images: [''],
-  published: false,
-  title: '',
-})
+const article = ref()
 
 async function setTitle() {
-  if (article.value.title) {
+  if (article.value) {
     if (article.value?.id) {
       // Update the article in supabase
       const { data, error } = await supabase
@@ -54,7 +46,7 @@ async function setTitle() {
     <form @submit.prevent="setTitle" class="flex justify-start space-x-4">
       <div class="block w-full max-w-xl">
         <input name="title" type="text" :placeholder="title" class="input-bordered w-full max-w-lg input"
-          v-model="article.title" v-if="editing" />
+          v-model="article?.title" v-if="editing" />
         <h2 class="text-5xl" v-else>{{ article?.title || title }}</h2>
       </div>
       <div class="flex" v-if="editing">

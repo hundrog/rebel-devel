@@ -14,5 +14,8 @@ export default defineNuxtConfig({
       exclude: [],
       cookieRedirect: false,
     }
+  },
+  typescript: {
+    typeCheck: true
   }
 })
