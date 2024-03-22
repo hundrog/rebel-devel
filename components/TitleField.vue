@@ -1,8 +1,12 @@
 <script lang="ts" setup>
+import { isJsxFragment } from 'typescript';
 import type { Database } from '~/types/supabase'
 const router = useRouter()
+const route = useRoute();
 
-const supabase = useSupabaseClient<Database>()
+const articleStore = useArticlesStore()
+
+const articleTitle = ref('')
 const editing = ref(false)
 const dirty = ref(false)
 
@@ -12,31 +16,27 @@ const defaultState = {
   title: 'New Article',
 }
 
-const article = ref({...defaultState})
+const article = ref({ ...defaultState })
 
 async function setTitle() {
   if (dirty.value) {
-    if (article.value?.id) {
-      // Update the article in supabase
-      const { data, error } = await supabase
-        .from('articles')
-        .update({ title: article.value.title })
-        .eq('id', article.value.id)
-        .select()
-      if (error) {
-        console.log(error)
+    if (articleStore.article.id) {
+      // Update the article
+      await articleStore.updateArticle( articleStore.article.id.toString(), { title: articleTitle.value } )
+
+      if (articleStore.errors) {
+        console.log(articleStore.errors)
+        articleStore.clearErrors()
       }
     } else {
       //create new article
-      const { data, error } = await supabase
-        .from('articles')
-        .insert({ title: article.value.title, category_id: 1 })
-        .select('id, title, published')
-      if (data) {
-        article.value = data[0]
-        router.push({ query: { id: article.value.id } })
+      await articleStore.createArticle(articleTitle.value, '')
+
+      if (articleStore.errors) {
+        console.log(articleStore.errors)
+        articleStore.clearErrors()
       } else {
-        console.log(error)
+        router.push({ query: { id: articleStore.article.id } })
       }
     }
   }
@@ -45,8 +45,20 @@ async function setTitle() {
   editing.value = false
 }
 
-watch(() => article.value.title, (newtitle, oldTitle) => {
-  if (newtitle !== oldTitle) { dirty.value = true }
+watch(() => articleTitle.value, (newtitle, oldTitle) => {
+  if (newtitle !== oldTitle) {
+    dirty.value = true
+  }
+})
+
+onMounted(async () => {
+  if (route.query.id) {
+    await articleStore.fetchSingle(route.query.id.toString())
+
+    articleTitle.value = articleStore.article.title
+  } else {
+    console.log('Article no exists')
+  }
 })
 </script>
 
@@ -55,8 +67,8 @@ watch(() => article.value.title, (newtitle, oldTitle) => {
     <form @submit.prevent="setTitle" class="flex justify-start space-x-4">
       <div class="block w-full max-w-xl">
         <input name="title" type="text" :placeholder="defaultState.title" class="input-bordered w-full max-w-lg input"
-          v-model="article.title" v-if="editing" />
-        <h2 class="text-5xl" v-else>{{ article?.title || defaultState.title }}</h2>
+          v-model="articleTitle" v-if="editing" />
+        <h2 class="text-5xl" v-else>{{ articleTitle || defaultState.title }}</h2>
       </div>
       <div class="flex flex-col" v-if="editing">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
