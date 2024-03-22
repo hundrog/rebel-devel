@@ -64,6 +64,12 @@ onMounted(async () => {
   if (articleStore.drafts) {
     categories.value["Drafts"] = articleStore.drafts;
   }
+
+  await articleStore.fetchPublished();
+
+  if (articleStore.published) {
+    categories.value["Published"] = articleStore.published;
+  }
 });
 
 const categories = ref({
