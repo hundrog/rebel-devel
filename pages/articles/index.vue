@@ -44,7 +44,10 @@
                 </li>
               </ul>
 
-              <NuxtLink :to="`write?id=${post.id}`" class="absolute inset-0" />
+              <NuxtLink
+                :to="`/articles/write?id=${post.id}`"
+                class="absolute inset-0"
+              />
             </li>
           </ul>
         </TabPanel>
