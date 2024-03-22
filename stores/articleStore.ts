@@ -11,6 +11,7 @@ export const useArticlesStore = defineStore('articles', () => {
     } as Tables<'articles'>
 
     const article = ref(defaulArticle)
+    const drafts = ref([defaulArticle])
     const errors = ref()
 
     const articleStatus = computed(() => {
@@ -72,5 +73,25 @@ export const useArticlesStore = defineStore('articles', () => {
         else { errors.value = error }
     }
 
-    return { article, errors, clearErrors, articleStatus, fetchSingle, createArticle, updateArticle }
+    async function fetchDrafts() {
+        const { data, error } = await supabase
+            .from('articles')
+            .select("*")
+            .eq('published', false)
+
+        if (!error) { drafts.value = data }
+        else { errors.value = error }
+    }
+
+    return {
+        article,
+        errors,
+        drafts,
+        clearErrors,
+        articleStatus,
+        fetchSingle,
+        createArticle,
+        updateArticle,
+        fetchDrafts
+    }
 })

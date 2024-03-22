@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { isJsxFragment } from 'typescript';
-import type { Database } from '~/types/supabase'
 const router = useRouter()
 const route = useRoute();
 

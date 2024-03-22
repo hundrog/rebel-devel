@@ -38,11 +38,10 @@
               <ul
                 class="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500"
               >
-                <li>{{ post.date }}</li>
-                <li>&middot;</li>
-                <li>{{ post.commentCount }} comments</li>
-                <li>&middot;</li>
-                <li>{{ post.shareCount }} shares</li>
+                <li v-if="post.created_at">
+                  Created at
+                  {{ new Date(post.created_at).toISOString().slice(0, 10) }}
+                </li>
               </ul>
 
               <NuxtLink :to="`write?id=${post.id}`" class="absolute inset-0" />
@@ -54,40 +53,36 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@headlessui/vue";
 
+const articleStore = useArticlesStore();
+
+onMounted(async () => {
+  await articleStore.fetchDrafts();
+
+  if (articleStore.drafts) {
+    categories.value["Drafts"] = articleStore.drafts;
+  }
+});
+
 const categories = ref({
-  Recent: [
+  Drafts: [
     {
-      id: 1,
-      title: "Does drinking coffee make you smarter?",
-      date: "5h ago",
-      commentCount: 5,
-      shareCount: 2,
-    },
-    {
-      id: 2,
-      title: "So you've bought coffee... now what?",
-      date: "2h ago",
-      commentCount: 3,
-      shareCount: 2,
+      content: "",
+      created_at: "",
+      id: "",
+      published: false,
+      title: "",
     },
   ],
-  Popular: [
+  Published: [
     {
-      id: 1,
-      title: "Is tech making coffee better or worse?",
-      date: "Jan 7",
-      commentCount: 29,
-      shareCount: 16,
-    },
-    {
-      id: 2,
-      title: "The most innovative things happening in coffee",
-      date: "Mar 19",
-      commentCount: 24,
-      shareCount: 12,
+      content: "",
+      created_at: "",
+      id: "",
+      published: true,
+      title: "",
     },
   ],
 });
