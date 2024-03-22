@@ -41,41 +41,27 @@ export type Database = {
       }
       articles: {
         Row: {
-          category_id: number
           content: string
-          created_at: string | null
+          created_at: string
           id: string
-          images: string[] | null
           published: boolean
           title: string
         }
         Insert: {
-          category_id: number
           content?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
-          images?: string[] | null
-          published?: boolean
-          title: string
-        }
-        Update: {
-          category_id?: number
-          content?: string
-          created_at?: string | null
-          id?: string
-          images?: string[] | null
           published?: boolean
           title?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "fk_category_id"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categories"
-            referencedColumns: ["id"]
-          },
-        ]
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          published?: boolean
+          title?: string
+        }
+        Relationships: []
       }
       categories: {
         Row: {

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Database, Tables } from '~/types/supabase'
+import type { Database } from '~/types/supabase'
 const router = useRouter()
 
 const supabase = useSupabaseClient<Database>()
@@ -7,7 +7,7 @@ const editing = ref(false)
 const dirty = ref(false)
 
 const defaultState = {
-  content: '',
+  published: false,
   id: '',
   title: 'New Article',
 }
@@ -31,8 +31,8 @@ async function setTitle() {
       const { data, error } = await supabase
         .from('articles')
         .insert({ title: article.value.title, category_id: 1 })
-        .select('id, title, content')
-      if (!error && data) {
+        .select('id, title, published')
+      if (data) {
         article.value = data[0]
         router.push({ query: { id: article.value.id } })
       } else {
@@ -77,6 +77,7 @@ watch(() => article.value.title, (newtitle, oldTitle) => {
       </svg>
     </form>
   </div>
+  <div class="badge badge-neutral" v-if="article.id">{{ article.published ? 'Published' : 'Draft' }}</div>
 </template>
 
 <style scoped>
