@@ -8,24 +8,32 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [18.x, 20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
 
       - name: Install commitlint
-        run: |
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: |
           npm install conventional-changelog-conventionalcommits
           npm install commitlint@latest
 
       - name: Validate current commit (last commit) with commitlint
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
         if: github.event_name == 'push'
-        run: npx commitlint --last --verbose
+      - run: npx commitlint --last --verbose
 
       - name: Validate PR commits with commitlint
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
         if: github.event_name == 'pull_request'
-        run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+      - run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
