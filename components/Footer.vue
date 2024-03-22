@@ -1,7 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-  <footer class="bottom-0 items-end bg-base-200 mt-12 p-10 text-base-content footer footer-center">
+  <footer class="bg-base-200 mt-12 p-10 text-base-content footer footer-center">
     <aside>
       <svg width="50" height="50" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"
         clip-rule="evenodd" class="inline-block fill-current">

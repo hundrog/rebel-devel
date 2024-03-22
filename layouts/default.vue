@@ -7,12 +7,14 @@ onMounted(() => {
 })
 </script>
 
-<template class="min-h-screen">
+<template>
+  <div class="flex flex-col items-end min-h-screen">
   <NavBar />
-  <div class="mx-auto container">
+  <div class="mx-auto container grow">
     <slot />
   </div>
   <Footer />
+</div>
 </template>
 
 <style scoped>
