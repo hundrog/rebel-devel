@@ -1,7 +1,7 @@
 import Heading from '@tiptap/extension-heading'
 import { mergeAttributes } from '@tiptap/core'
 
-const TailwindHeadings = Heading.configure({ levels: [1, 2, 3] }).extend({
+export const TailwindHeadings = Heading.configure({ levels: [1, 2, 3] }).extend({
     levels: [1, 2, 3],
     renderHTML({ node, HTMLAttributes }) {
       const classes = {
@@ -21,5 +21,3 @@ const TailwindHeadings = Heading.configure({ levels: [1, 2, 3] }).extend({
       ]
     },
   })
-
-export default TailwindHeadings
