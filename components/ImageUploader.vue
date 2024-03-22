@@ -57,7 +57,7 @@ const downloadImage = (filePath: string) => {
 const updateArticle = async () => {
   await supabase
     .from('images')
-    .insert({ article_id: dir.value, name: path.value.split('/')[1] })
+    .insert({ article_id: path.value.split('/')[0], name: path.value.split('/')[1] })
 }
 
 watch(path, () => {
@@ -71,6 +71,12 @@ watch(() => route.query, (newId, oldId) => {
   // react to route changes...
   console.log('New id received: ', newId)
   dir.value = newId.id?.toString()
+})
+
+onMounted(async () => {
+  if (route.query.id) {
+    dir.value = route.query.id.toString()
+  }
 })
 </script>
 

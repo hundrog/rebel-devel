@@ -74,6 +74,17 @@ export const useArticlesStore = defineStore('articles', () => {
         else { errors.value = error }
     }
 
+    async function fetchSinglePublished(id: string) {
+        const { data, error } = await supabase
+            .from('articles')
+            .select("*")
+            .eq('id', id)
+            .eq('published', true)
+
+        if (!error) { article.value = data[0] }
+        else { errors.value = error }
+    }
+
     async function fetchDrafts() {
         const { data, error } = await supabase
             .from('articles')
@@ -102,6 +113,7 @@ export const useArticlesStore = defineStore('articles', () => {
         clearErrors,
         articleStatus,
         fetchSingle,
+        fetchSinglePublished,
         createArticle,
         updateArticle,
         fetchDrafts,
